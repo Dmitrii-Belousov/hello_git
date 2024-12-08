@@ -6,7 +6,30 @@ output: html_document
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(readr)
+library(dplyr)
+
 ```
+
+```{r data, include=FALSE}
+top10 <- read.csv("billboard_top10.csv") %>% 
+  select(date = "Date", artist = "Artist", song = "Song")
+```
+
+```{r}
+modern <- top10 %>% 
+  filter(date >= "1980-01-01")
+```
+
+```{r}
+artsist <- modern %>% 
+  count(artist) %>% 
+  arrange(-n) %>% 
+  filter(! artist %in% c("Soundtrack", "Various Artists"))
+
+#head(artsist)
+```
+
 
 ```{r}
 set.seed(42)
@@ -19,3 +42,11 @@ me <- median(xs)
 ```
 
 Median is `r me`.
+
+```{r}
+artsist[xs,] %>% 
+  arrange(-n) %>% 
+  gt::gt()
+```
+
+
